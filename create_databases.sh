@@ -21,6 +21,15 @@ sudo su -l postgres -c "postgresql-setup initdb"
 
 exit 1
 
+sudo systemctl enable postgresql
+sudo systemctl restart postgresql
+
 sudo -u postgres psql < create_users.sql
 sudo -u postgres psql < create_schemas.sql
 sudo -u postgres psql < alter_schemas.sql
+
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh postgresql scm scm scm
+
+sudo systemctl start cloudera-scm-server
+
+sudo tail -n 500 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
